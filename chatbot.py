@@ -40,14 +40,28 @@ if prompt:
         model="deepseek-v4-pro",
         messages=[
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": prompt},
+            *st.session_state.messages
         ],
-        stream=False,
+        stream=True,
         reasoning_effort="high",
         extra_body={"thinking": {"type": "enabled"}}
     )
-    st.chat_message("assistant").write(response.choices[0].message.content)
-    st.session_state.messages.append({"role": "assistant", "content": response.choices[0].message.content})
+
+    # 非流式输出解析方式
+    # st.chat_message("assistant").write(response.choices[0].message.content)
+    # st.session_state.messages.append({"role": "assistant", "content": response.choices[0].message.content})
+
+    # 流式输出解析方式
+    response_message = st.empty()
+    full_response = ""
+    for chunk in response:
+        if chunk.choices[0].delta.content is not None:
+            content = chunk.choices[0].delta.content
+            full_response += content
+            response_message.chat_message("assistant").write(full_response)
+
+    st.session_state.messages.append({"role": "assistant", "content": full_response})
+
 
 # prompt = st.chat_input(
 #     placeholder="输入消息并可上传图片...",
