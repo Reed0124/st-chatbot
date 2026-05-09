@@ -5,3 +5,7 @@
 ```
 streamlit run ./chatbot.py
 ```
+
+## 页面展示
+<img width="2560" height="1271" alt="image" src="https://github.com/user-attachments/assets/0ad2b436-2034-4d8e-8fb4-6a90adaf022d" />
+
